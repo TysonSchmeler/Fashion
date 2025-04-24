@@ -17,3 +17,87 @@
 После сбора этих параметров необходимо написать похожий сценарий, но с дополнениями и улучшениями и поместить в ту же таблицу
 
 ВАЖНО! Всё это нужно автоматизировать, в том числе с помощью использования нейросетей и языков программирования
+
+_____________________________________________________________________________________________________
+скрипт парсинга YouTube с вытягиванием данных и субтитров
+_____________________________________________________________________________________________________
+
+import os
+import pandas as pd
+from googleapiclient.discovery import build
+from youtube_transcript_api import YouTubeTranscriptApi, TranscriptsDisabled
+
+# 🔐 Укажи свой ключ (получить можно тут: https://console.developers.google.com/)
+API_KEY = "AIzaSyCWlorug-pbu5jGuF-Tk76HcD3tsgkt_ps"
+YOUTUBE = build('youtube', 'v3', developerKey=API_KEY)
+
+def search_youtube_videos(query, max_results=5):
+    request = YOUTUBE.search().list(
+        q=query,
+        part="snippet",
+        order="viewCount",
+        type="video",
+        regionCode="RU",
+        maxResults=max_results
+    )
+    response = request.execute()
+    
+    for item in response['items']:
+        # print(item)
+        # print(f"Title: {item['snippet']['title']}")
+        print(f"ChannelTitle: {item['snippet']['channelTitle']}")
+        # print(f"Video URL: https://www.youtube.com/watch?v={item['id']['videoId']}")
+        # print(f"Published at: {item['snippet']['publishedAt']}")
+        # print('-' * 40)
+    
+    return [item["id"]["videoId"] for item in response.get("items", [])]
+
+# def get_video_details(video_id):
+#     request = YOUTUBE.videos().list(
+#         part="snippet,statistics,contentDetails",
+#         id=video_id
+#     )
+#     response = request.execute()
+#     if not response["items"]:
+#         return None
+
+#     item = response["items"][0]
+#     stats = item.get("statistics", {})
+#     snippet = item.get("snippet", {})
+#     content = item.get("contentDetails", {})
+
+#     # Вытягиваем субтитры
+#     try:
+#         transcript = YouTubeTranscriptApi.get_transcript(video_id)
+#         full_text = " ".join([line["text"] for line in transcript])
+#     except TranscriptsDisabled:
+#         full_text = "No transcript"
+
+#     return {
+#         "video_id": video_id,
+#         "title": snippet.get("title"),
+#         "url": f"https://www.youtube.com/watch?v={video_id}",
+#         "views": int(stats.get("viewCount", 0)),
+#         "comments": int(stats.get("commentCount", 0)),
+#         "duration": content.get("duration"),
+#         "transcript": full_text
+#     }
+
+def run_parser(query, count=5):
+    video_ids = search_youtube_videos(query, count)
+    # print(f"Найдено видео: {video_ids}")
+    # results = []
+    # for vid in video_ids:
+    #     details = get_video_details(vid)
+    #     if details:
+    #         results.append(details)
+
+    # print(results)
+    # return pd.DataFrame(results)
+
+# 🔍 Пример запуска
+if __name__ == "__main__":
+    niche_query = "продажа многоквартирных домов"
+    df = run_parser(niche_query, count=10)
+    # df.to_csv("youtube_data.csv", index=False)
+    # print("✅ Данные сохранены в youtube_data.csv")
