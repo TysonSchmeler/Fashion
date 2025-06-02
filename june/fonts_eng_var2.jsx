@@ -1,5 +1,4 @@
-var fonts = [
-  { name: "CyrillicGothMedium", tracking: -80, fontSize: 72},
+var fonts = [  { name: "CyrillicGothMedium", tracking: -80, fontSize: 72},
   { name: "Moyenage", tracking: -80, fontSize: 72},
   { name: "MaclenburgGotisch", tracking: -60, fontSize: 110},
   { name: "Schwabacher-Regular", tracking: -80, fontSize: 90},
@@ -14,10 +13,10 @@ var fonts = [
   { name: "BrushScriptMTRusbyme-Italic", tracking: -20, fontSize: 100},
   { name: "aAnotherTag", tracking: 50, fontSize: 90},
   { name: "a_CooperBlack", tracking: -60, fontSize: 72},
-  { name: "DSGreece", tracking: -110, fontSize: 72},
+  { name: "DSGreece", tracking: -110, fontSize: 100},
   { name: "ACampusBold", tracking: -50, fontSize: 72},
   { name: "TheVoiceFont", tracking: -50, fontSize: 72},
-  { name: "AConceptoNrBoldItalic", tracking: -50, fontSize: 72},
+  { name: "AConceptoNrBoldItalic", tracking: -50, fontSize: 100},
   { name: "AkademitscheskajaBuch", tracking: -60, fontSize: 130}
 ];
 
@@ -51,7 +50,7 @@ for (var i = 0; i < fonts.length; i++) {
 
         // ===== Надпись =====
         var textItem = doc.textFrames.add();
-        textItem.contents = "nakama";
+        textItem.contents = "TESTING";
 
         with (textItem.textRange.characterAttributes) {
             textFont = fontRef;
