@@ -1,0 +1,57 @@
+1. Requirements
+sudo apt update
+sudo apt upgrade
+
+sudo apt install apache2 mariadb-server php php-common php-mysql php-gd php-xml php-mbstring php-mcrypt php-xmlrpc unzip wget -y
+
+sudo systemctl start apache2
+sudo systemctl start mariadb
+sudo systemctl enable apache2
+sudo systemctl enable mariadb
+
+
+2. Configure MariaDB and Create a WordPress Database
+sudo mysql_secure_installation
+
+mysql -u root -p
+
+CREATE DATABASE wordpress;
+GRANT ALL PRIVILEGES on wordpress.* to 'user'@'localhost' identified by 'password';
+FLUSH PRIVILEGES;
+exit
+
+3. Install and Run WordPress
+
+wget http://wordpress.org/latest.tar.gz
+tar -xzvf latest.tar.gz
+sudo cp -avr wordpress/* /var/www/html/
+
+sudo mkdir /var/www/html/wp-content/uploads
+sudo chown -R www-data:www-data /var/www/html/
+sudo chmod -R 755 /var/www/html/
+
+cd /var/www/html/
+sudo mv wp-config-sample.php wp-config.php
+sudo nano wp-config.php
+
+define('DB_NAME', 'wordpress');
+define('DB_USER', 'user');
+define('DB_PASSWORD', 'password');
+
+sudo ufw allow 45883
+sudo ufw enable
+sudo ufw allow http
+sudo ufw allow https
+sudo ufw status numbered
+
+rm index.html
+
+nano /etc/apache2/sites-available/000-default.conf
+
+<Directory /var/www/html>
+    AllowOverride All
+</Directory>
+
+sudo service apache2 restart
+
+
